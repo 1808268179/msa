@@ -1,0 +1,42 @@
+dataset:
+  name: imagefolder
+  root: /data/users/jw/data/different_camera/c1_train
+  num_classes: 22
+
+model:
+  name: msanet
+  backbone: resnet50
+  pretrained: true
+  image_size: 448
+  scales: [1, 2, 4, 8]
+  embed_dim: 2048
+  attn_dim: 512
+  dropout: 0.2
+
+train:
+  epochs: 100
+  batch_size: 16
+  num_workers: 4
+  pin_memory: true
+  amp: true
+  seed: 42
+
+optimizer:
+  type: sgd
+  backbone_lr: 0.0002
+  new_lr: 0.002
+  momentum: 0.9
+  weight_decay: 0.0005
+
+scheduler:
+  type: cosine
+  eta_min: 1.0e-6
+
+augmentation:
+  resize: 512
+  crop: 448
+  hflip: 0.5
+
+output:
+  dir: ./outputs/custom_resnet50_msanet
+  save_best_only: true
