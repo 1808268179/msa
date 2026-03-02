@@ -23,11 +23,24 @@
 
 ## 2. 基础用法（解释模型预测类别）
 
+### 方式 A：在仓库根目录执行（推荐）
+
 ```bash
 python MSANET/tools/visualize_heatmap.py \
   --config MSANET/configs/custom_resnet50.yaml \
   --checkpoint /path/to/best.pth \
-  --image /path/to/test.jpg \
+  --image "/path/to/test.jpg" \
+  --output outputs/gradcam
+```
+
+### 方式 B：先进入 `MSANET/` 目录再执行
+
+```bash
+cd MSANET
+python tools/visualize_heatmap.py \
+  --config configs/custom_resnet50.yaml \
+  --checkpoint /path/to/best.pth \
+  --image "/path/to/test.jpg" \
   --output outputs/gradcam
 ```
 
@@ -47,10 +60,19 @@ python MSANET/tools/visualize_heatmap.py \
 如果你想看指定类别（比如类别ID=10）的关注区域：
 
 ```bash
+# 在仓库根目录
 python MSANET/tools/visualize_heatmap.py \
   --config MSANET/configs/custom_resnet50.yaml \
   --checkpoint /path/to/best.pth \
-  --image /path/to/test.jpg \
+  --image "株 1_IMG_20250922_105708_1.jpg" \
+  --target-class 10 \
+  --output outputs/gradcam
+
+# 或在 MSANET 目录
+python tools/visualize_heatmap.py \
+  --config configs/custom_resnet50.yaml \
+  --checkpoint /path/to/best.pth \
+  --image "株 1_IMG_20250922_105708_1.jpg" \
   --target-class 10 \
   --output outputs/gradcam
 ```
@@ -87,3 +109,13 @@ python MSANET/tools/visualize_heatmap.py \
 3. **CPU 也能跑吗**
    - 可以。脚本会自动检测 CUDA，不可用时使用 CPU。
 
+
+4. **报错 `ModuleNotFoundError: No module named datasets`**
+   - 已在脚本中兼容该问题。请确保使用最新版脚本。
+   - 如果你在 `MSANET/` 目录运行，请使用相对路径：`--config configs/xxx.yaml`，不要写成 `MSANET/configs/xxx.yaml`。
+
+
+5. **图片文件名有空格/中文（如：`株 1_IMG_20250922_105708_1.jpg`）**
+   - 命令里请给路径加引号，例如：
+   - `--image "株 1_IMG_20250922_105708_1.jpg"`
+   - 或使用绝对路径：`--image "/data/xxx/株 1_IMG_20250922_105708_1.jpg"`

@@ -1,10 +1,19 @@
 import argparse
 from pathlib import Path
+import sys
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 import numpy as np
 from PIL import Image
 import torch
 import torch.nn.functional as F
+try:
+    from matplotlib import colormaps
+except Exception:
+    colormaps = None
 from matplotlib import cm
 
 from datasets.transforms import build_eval_transform
@@ -31,8 +40,17 @@ def build_gradcam(feature_map: torch.Tensor, gradients: torch.Tensor) -> torch.T
     return cam
 
 
+
+
+def apply_jet_colormap(heatmap: np.ndarray) -> np.ndarray:
+    if colormaps is not None:
+        return colormaps["jet"](heatmap)[..., :3]
+    if hasattr(cm, "get_cmap"):
+        return cm.get_cmap("jet")(heatmap)[..., :3]
+    return cm.jet(heatmap)[..., :3]
+
 def blend_heatmap(rgb_img: np.ndarray, heatmap: np.ndarray, alpha: float = 0.45) -> np.ndarray:
-    colored = cm.get_cmap("jet")(heatmap)[..., :3]
+    colored = apply_jet_colormap(heatmap)
     blended = (1 - alpha) * rgb_img + alpha * colored
     return np.clip(blended, 0, 1)
 
@@ -103,7 +121,7 @@ def main():
     overlay_path = out_dir / f"{stem}_overlay.png"
 
     Image.fromarray((rgb * 255).astype(np.uint8)).save(input_path)
-    Image.fromarray((cm.get_cmap("jet")(cam)[..., :3] * 255).astype(np.uint8)).save(cam_path)
+    Image.fromarray((apply_jet_colormap(cam) * 255).astype(np.uint8)).save(cam_path)
     Image.fromarray((overlay * 255).astype(np.uint8)).save(overlay_path)
 
     print(f"预测类别: {pred_idx}, 预测置信度: {pred_score:.4f}")
