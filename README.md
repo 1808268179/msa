@@ -29,7 +29,7 @@
 python MSANET/tools/visualize_heatmap.py \
   --config MSANET/configs/custom_resnet50.yaml \
   --checkpoint /path/to/best.pth \
-  --image /path/to/test.jpg \
+  --image "/path/to/test.jpg" \
   --output outputs/gradcam
 ```
 
@@ -40,7 +40,7 @@ cd MSANET
 python tools/visualize_heatmap.py \
   --config configs/custom_resnet50.yaml \
   --checkpoint /path/to/best.pth \
-  --image /path/to/test.jpg \
+  --image "/path/to/test.jpg" \
   --output outputs/gradcam
 ```
 
@@ -64,7 +64,7 @@ python tools/visualize_heatmap.py \
 python MSANET/tools/visualize_heatmap.py \
   --config MSANET/configs/custom_resnet50.yaml \
   --checkpoint /path/to/best.pth \
-  --image /path/to/test.jpg \
+  --image "株 1_IMG_20250922_105708_1.jpg" \
   --target-class 10 \
   --output outputs/gradcam
 
@@ -72,7 +72,7 @@ python MSANET/tools/visualize_heatmap.py \
 python tools/visualize_heatmap.py \
   --config configs/custom_resnet50.yaml \
   --checkpoint /path/to/best.pth \
-  --image /path/to/test.jpg \
+  --image "株 1_IMG_20250922_105708_1.jpg" \
   --target-class 10 \
   --output outputs/gradcam
 ```
@@ -113,3 +113,9 @@ python tools/visualize_heatmap.py \
 4. **报错 `ModuleNotFoundError: No module named datasets`**
    - 已在脚本中兼容该问题。请确保使用最新版脚本。
    - 如果你在 `MSANET/` 目录运行，请使用相对路径：`--config configs/xxx.yaml`，不要写成 `MSANET/configs/xxx.yaml`。
+
+
+5. **图片文件名有空格/中文（如：`株 1_IMG_20250922_105708_1.jpg`）**
+   - 命令里请给路径加引号，例如：
+   - `--image "株 1_IMG_20250922_105708_1.jpg"`
+   - 或使用绝对路径：`--image "/data/xxx/株 1_IMG_20250922_105708_1.jpg"`
